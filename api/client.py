@@ -5,7 +5,7 @@ import streamlit as st
 
 
 def get_llama_response(input_text):
-    response = requests.post("http://localhost:8000/essay_llama/invoke", json={'input': {'topic': input_text}})
+    response = requests.post("https://ai-content-generation-usingllama-and-byz7.onrender.com/essay_llama/invoke", json={'input': {'topic': input_text}})
     try:
         response_json = response.json()
         return response_json['output']['content']  # Navigate to the content field explicitly
@@ -15,7 +15,7 @@ def get_llama_response(input_text):
 
 
 def get_gemma_response(input_text):
-    response = requests.post("http://localhost:8000/poem_gemma/invoke", json={'input': {'topic': input_text}})
+    response = requests.post("https://ai-content-generation-usingllama-and-byz7.onrender.com/poem_gemma/invoke", json={'input': {'topic': input_text}})
     try:
         response_json = response.json()
         return response_json['output']['content']  # Navigate to the content field explicitly
