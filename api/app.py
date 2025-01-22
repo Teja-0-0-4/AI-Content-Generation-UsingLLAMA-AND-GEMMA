@@ -6,8 +6,10 @@ import uvicorn
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
-os.environ['GROQ_API_KEY'] = os.getenv('GROQ_API_KEY')
+
+os.environ['GROQ_API_KEY']=os.getenv('GROQ_API_KEY')
 
 app = FastAPI(
     title="Langchain Server",
@@ -15,22 +17,32 @@ app = FastAPI(
     description="A simple API server"
 )
 
-# Add a root route
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the AI Content Generation API! Visit /docs for available routes."}
-
-# Existing routes
-add_routes(app, ChatGroq(), path="/groq")
+add_routes(
+    app,
+    ChatGroq(),
+    path="/groq"
+)
 
 model = ChatGroq(model="llama-3.3-70b-versatile", api_key=os.getenv("GROQ_API_KEY"))
-llm = ChatGroq(model="gemma2-9b-it", api_key=os.getenv("GROQ_API_KEY"))
 
-prompt1 = ChatPromptTemplate.from_template("Write me an essay about {topic} with 100 words")
-prompt2 = ChatPromptTemplate.from_template("Write me a poem about {topic} with 100 words")
+llm = ChatGroq(model="gemma2-9b-it",api_key=os.getenv("GROQ_API_KEY"))
 
-add_routes(app, prompt1 | model, path="/essay_llama")
-add_routes(app, prompt2 | llm, path="/poem_gemma")
+prompt1=ChatPromptTemplate.from_template("Write me an essay about {topic} with 100 words")
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+prompt2 = ChatPromptTemplate.from_template("write me a poem about {topic} with 100 words")
+
+add_routes(
+    app,
+    prompt1|model,
+    path="/essay_llama"
+)
+
+add_routes(
+    app,
+    prompt2|llm,
+    path="/poem_gemma"
+)
+
+
+if __name__=="__main__":
+    uvicorn.run(app,host="localhost",port=8000)
